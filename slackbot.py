@@ -21,31 +21,30 @@ reddit = Reddit()
 
 @slack_event_adaptor.on('message')
 def message(payload):
-    
+
     event = payload.get('event', {})
     channel_id = event.get('channel')
     user_id = event.get('user')
     text = event.get('text')
-        
+    type_ = event.get('type') 
+    print(type_)       
 
     comments = reddit.sort_comments('learnpython', text)
 
     message = ''
-    print(user_id)
+   
     for comment in comments.keys():
        
         url = comments[comment]
-        message+=f'{comment}: {url}'
+        message+=f'{comment}: {url} \n'
 
-    if BOT_ID!=user_id and not message:
-        pass
-    elif BOT_ID!=user_id and message:
+   
+    if BOT_ID!=user_id and message!='':
             client.chat_postMessage(
             channel=channel_id,
-            text=message
+            text=f'I have found these links: \n{message}'
             )
             
-
 
         
 
